@@ -1,0 +1,67 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables/>
+  <block type="Goertek_Start" x="-303" y="-155">
+    <next>
+      <block type="block_inittime">
+        <field name="time">00:00</field>
+        <field name="color">#cccccc</field>
+        <statement name="functionIntit">
+          <block type="Goertek_UnLock">
+            <next>
+              <block type="Goertek_TakeOff2">
+                <field name="alt">120</field>
+                <next>
+                  <block type="Goertek_MoveToCoord2">
+                    <field name="X">141</field>
+                    <field name="Y">80</field>
+                    <field name="Z">120</field>
+                    <next>
+                      <block type="Goertek_MoveToCoord2">
+                        <field name="X">20</field>
+                        <field name="Y">40</field>
+                        <field name="Z">120</field>
+                        <next>
+                          <block type="Goertek_RoundInAir">
+                            <field name="X">141</field>
+                            <field name="Y">80</field>
+                            <field name="Cx">80</field>
+                            <field name="Cy">80</field>
+                            <field name="H">120</field>
+                            <field name="direction">0</field>
+                            <field name="V">180</field>
+                            <next>
+                              <block type="Goertek_RoundInAir">
+                                <field name="X">141</field>
+                                <field name="Y">80</field>
+                                <field name="Cx">80</field>
+                                <field name="Cy">80</field>
+                                <field name="H">120</field>
+                                <field name="direction">0</field>
+                                <field name="V">180</field>
+                                <next>
+                                  <block type="Goertek_RoundInAir">
+                                    <field name="X">141</field>
+                                    <field name="Y">80</field>
+                                    <field name="Cx">80</field>
+                                    <field name="Cy">80</field>
+                                    <field name="H">120</field>
+                                    <field name="direction">0</field>
+                                    <field name="V">180</field>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </next>
+  </block>
+</xml>
