@@ -3,6 +3,7 @@ import PyPDF2
 import re
 from PyPDF2 import PdfReader, PdfWriter
 from PyPDF2.generic import RectangleObject
+from decimal import Decimal
 
 def get_all_pdfs_in_directory(directory):
     pdf_files = []
@@ -31,7 +32,7 @@ def resize_large_pages(pdf_path, output_path):
     reader = PdfReader(pdf_path)
     writer = PdfWriter()
 
-    a3_width, a3_height = 841.89, 1190.55  # A3 size in points
+    a3_width, a3_height = Decimal("841.89"), Decimal("1190.55")  # A3 size in points
 
     for page in reader.pages:
         media_box = page.mediabox
@@ -49,7 +50,7 @@ def resize_large_pages(pdf_path, output_path):
             scale_ratio = min(a3_width / short_side, a3_height / long_side)
             new_width = short_side * scale_ratio
             new_height = long_side * scale_ratio
-            page.scale_by(scale_ratio)
+            page.scale_by(float(scale_ratio))
 
             # Set the page size to A3 and add blank space if needed, ensuring correct orientation
             if width > height:  # Landscape
