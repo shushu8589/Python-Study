@@ -38,11 +38,37 @@ def resize_large_pages(pdf_path, output_path):
         width = media_box.width
         height = media_box.height
 
+        # Ensure width is the shorter side and height is the longer side, regardless of rotation
+        if width < height:
+            short_side, long_side = width, height
+        else:
+            short_side, long_side = height, width
+
         # Resize pages larger than A3 to A3 size, keeping aspect ratio and scaling the page
-        if width > a3_width or height > a3_height:
-            scale_ratio = min(a3_width / width, a3_height / height)
+        if long_side > a3_height or short_side > a3_width:
+            scale_ratio = min(a3_width / short_side, a3_height / long_side)
+            new_width = short_side * scale_ratio
+            new_height = long_side * scale_ratio
             page.scale_by(scale_ratio)
-            page.mediabox = RectangleObject([0, 0, a3_width, a3_height])
+
+            # Set the page size to A3 and add blank space if needed, ensuring correct orientation
+            if width > height:  # Landscape
+                page.mediabox = RectangleObject([0, 0, a3_height, a3_width])
+                page.trimbox = RectangleObject([0, 0, a3_height, a3_width])
+                page.cropbox = RectangleObject([0, 0, a3_height, a3_width])
+                translation_x = (a3_height - new_width) / 2
+                translation_y = (a3_width - new_height) / 2
+            else:  # Portrait
+                page.mediabox = RectangleObject([0, 0, a3_width, a3_height])
+                page.trimbox = RectangleObject([0, 0, a3_width, a3_height])
+                page.cropbox = RectangleObject([0, 0, a3_width, a3_height])
+                translation_x = (a3_width - new_width) / 2
+                translation_y = (a3_height - new_height) / 2
+
+            # Manually add translation to content stream for centering both horizontally and vertically
+            content = page.get_contents()
+            if content:
+                content.stream = f'q 1 0 0 1 {translation_x} {translation_y} cm {scale_ratio} 0 0 {scale_ratio} 0 0 cm {content.stream} Q'
 
         writer.add_page(page)
 
@@ -64,7 +90,7 @@ def main():
     current_directory = os.path.dirname(os.path.abspath(__file__))
     pdf_files = get_all_pdfs_in_directory(current_directory)
     if pdf_files:
-        output_pdf = os.path.join(current_directory, '合并.pdf')
+        output_pdf = os.path.join(current_directory, '合并A3.pdf')
         merge_pdfs(pdf_files, output_pdf)
         print(f'Merged {len(pdf_files)} PDF files into "{output_pdf}"')
     else:
