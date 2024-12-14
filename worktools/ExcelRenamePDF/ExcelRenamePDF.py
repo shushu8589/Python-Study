@@ -1,6 +1,6 @@
 #需要安装pandas openpyxl模块，安装代码：pip install pandas openpyxl
 #2024年7月6日
-#功能：把当前文件夹下data.xlsx文件中的第A列数据读取后查询当前文件夹下有无对应开头的pdf文件，如果有，就重命名文件，以A1+空格+B2形式重命名
+#功能：把当前文件夹下data.xlsx文件中的第B列数据读取后查询当前文件夹下有无对应开头的pdf文件，如果有，就重命名文件，以A1+空格+C2形式重命名
 import os
 import pandas as pd
 import glob
@@ -20,14 +20,16 @@ def rename_pdfs(excel_file, directory):
         current_row = df.iloc[index]  # 当前行
         next_row = df.iloc[index + 1]  # 下一行
 
-        file_pattern = f"{current_row[1].strip()}*.pdf"  # 查找以A列数据开头的PDF文件
-        file_list = glob.glob(os.path.join(directory, file_pattern))
+        file_pattern = f"{current_row[1].strip()}*.pdf"  # 查找以B列数据开头的PDF文件
+        # file_list = glob.glob(os.path.join(directory, file_pattern))
+        file_list = glob.glob(os.path.join(directory, '**', file_pattern), recursive=True)  # 递归查找
 
         if file_list:
             for old_file_path in file_list:
                 file_base_name = os.path.basename(old_file_path)
                 new_name = f"{current_row[1].strip()} {next_row[2].strip()}.pdf"  # 新文件名
-                new_file_path = os.path.join(directory, new_name)
+                #new_file_path = os.path.join(directory, new_name)
+                new_file_path = os.path.join(os.path.dirname(old_file_path), new_name)  # 保持文件夹路径
                 os.rename(old_file_path, new_file_path)
                 print(f'Renamed {file_base_name} to {new_name}')
         else:
